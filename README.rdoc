@@ -1,6 +1,22 @@
 = eventmachine-itunes
 
-Description goes here.
+An {EventMachine}[http://wiki.github.com/eventmachine/eventmachine/] extension to watch iTunes play/pause/stop
+
+== Synopsis
+
+ require 'eventmachine-itunes'
+
+=== Watch iTunes
+
+ module Watcher
+   def on_play(info)
+     puts 'now playing %s' % [info['Artist'], info['Name']].join(' - ')
+   end
+ end
+
+ EM.run {
+   EM.watch_itunes(Watcher)
+ }
 
 == Contributing to eventmachine-itunes
  
