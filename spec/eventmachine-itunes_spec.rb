@@ -21,7 +21,7 @@ describe EventMachine::ITunesWatch do
   end
 
   it 'should watch playing' do
-    watcher = Watcher.new('com.apple.iTunes.playerInfo')
+    watcher = nil
 
     EM.run {
       watcher = EM.watch_itunes(Watcher)
