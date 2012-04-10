@@ -20,7 +20,7 @@ describe EventMachine::ITunesWatch do
     @itunes.stop
   end
 
-  it 'should watch playing' do
+  it 'should watch playing with class' do
     watcher = nil
 
     EM.run {
@@ -37,5 +37,29 @@ describe EventMachine::ITunesWatch do
 
     watcher.value.should_not be_nil
     watcher.user_info['Total Time'].should be_kind_of(Fixnum)
+  end
+
+  it 'should watch playing with block' do
+    result = nil
+    watcher = nil
+
+    EM.run {
+      watcher = EM.watch_itunes {|c|
+        (class << c; self; end).send(:define_method, :on_play) {|info|
+          result = info
+        }
+      }
+
+      @itunes.playlists["Music"].tracks[1].play
+
+      EM::add_timer(1) {
+        @itunes.stop
+        EM.stop
+        watcher.stop
+      }
+    }
+
+    result.should_not be_nil
+    result['Total Time'].should be_kind_of(Fixnum)
   end
 end
